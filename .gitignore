@@ -1,4 +1,4 @@
-build/*
+build/*.o
 bin/*
-!build
-!bin
+!build/.gitkeep
+!bin/.gitkeep
