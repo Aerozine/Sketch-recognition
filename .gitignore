@@ -1,4 +1,2 @@
 build/*.o
 bin/*
-!build/.gitkeep
-!bin/.gitkeep

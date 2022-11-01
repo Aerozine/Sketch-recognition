@@ -16,6 +16,7 @@ ALL = $(TARGET) $(TTARGET)
 # Object files
 
 $(BUILDDIR)%.o: $(SRCDIR)%.c
+	@mkdir -p $(BUILDDIR) $(BINDIR)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 # Executables
