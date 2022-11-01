@@ -23,10 +23,10 @@ $(BUILDDIR)%.o: $(SRCDIR)%.c
 all: $(ALL)
 
 $(TARGET): $(BUILDDIR)main.o $(BUILDDIR)PointLine.o $(BUILDDIR)Sketch.o $(BUILDDIR)Dataset.o $(BUILDDIR)Recognizer.o $(BUILDDIR)easyppm.o
-$(TTARGET): $(BUILDDIR)main.o $(BUILDDIR)PointLine.o $(BUILDDIR)Sketch.o $(BUILDDIR)Dataset.o $(BUILDDIR)Recognizer.o $(BUILDDIR)easyppm.o
+$(TTARGET): $(BUILDDIR)PointLine.o $(BUILDDIR)Sketch.o $(BUILDDIR)Dataset.o $(BUILDDIR)Recognizer.o $(BUILDDIR)easyppm.o $(BUILDDIR)test.o
 
 $(ALL):
-	$(CC) -o $@ $^ $(LDFLAGS) 
+	$(CC) -o $(BINDIR)$@ $^ $(LDFLAGS) 
 
 # Phony
 .PHONY: all clean run $(TARGET) $(TTARGET)
