@@ -1,7 +1,7 @@
 #include "PointLine.h"
 #include "Sketch.h"
 
-struct sketch_t
+struct sketch_t // juju est triste
 {
   // A compléter
 };
