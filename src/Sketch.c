@@ -111,14 +111,16 @@ Sketch *sketchCompress(Sketch *sk, double dMax)
   return compactSk;
 }
 
+// Calcule la plus petite des distances entre un point p et chaque segment du sketch sk
+
 static double minDistanceToSegment(Sketch *sk, Point p)
 {
-  double dmin = pow(10.0,37);                                                                      // dmin initial = plus grande valeur double (10^37), dm(n) toujours < dm(0)
+  double dmin = pow(10.0,37);                                                                      // dmin initial = plus grande valeur double (10^37) => dm(n) toujours < dm(0)
   double de   = 0;
   Point p1, p2;
   PolyLine stroke;
 
-  for(int i=0; i < sketchGetNbStrokes(sk), i++)                                                    // comparer distance entre 1 point et chaque segment du sketch
+  for(int i=0; i < sketchGetNbStrokes(sk), i++)
   {
     stroke = sketchGetStroke(sk,i);
     for(int j=0; j < stroke->length-1; j++)
@@ -137,6 +139,8 @@ static double minDistanceToSegment(Sketch *sk, Point p)
 
   return dmin;
 }
+
+// Calcule la plus grande des [minDistanceToSegment(sk2,p)] pour chaque point p du sketch sk1
 
 static double maxDistancePoints(Sketch *sk1, Sketch *sk2)
 {
