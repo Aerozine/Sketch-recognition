@@ -1,5 +1,6 @@
 #include "PointLine.h"
 #include "Sketch.h"
+#include <math.h>
 
 struct sketch_t
 {
@@ -110,9 +111,68 @@ Sketch *sketchCompress(Sketch *sk, double dMax)
   return compactSk;
 }
 
+static double minDistanceToSegment(Sketch *sk, Point p)
+{
+  double dmin = pow(10.0,37);                                                                      // dmin initial = plus grande valeur double (10^37), dm(n) toujours < dm(0)
+  double de   = 0;
+  Point p1, p2;
+  PolyLine stroke;
+
+  for(int i=0; i < sketchGetNbStrokes(sk), i++)                                                    // comparer distance entre 1 point et chaque segment du sketch
+  {
+    stroke = sketchGetStroke(sk,i);
+    for(int j=0; j < stroke->length-1; j++)
+    {
+      if(stroke->length > 1)
+      {
+        p1 = stroke->points[j];
+        p2 = stroke->points[j+1];
+        de = plDistanceToSegment(p,p1,p2);
+        if (de < dmin)
+          dmin = de;
+      }
+        
+    }
+  }
+
+  return dmin;
+}
+
+static double maxDistancePoints(Sketch *sk1, Sketch *sk2)
+{
+  double dmax = 0;
+  double dmin = 0;
+  Point p;
+  PolyLine stroke;
+
+  for(int i=0; i < sketchGetNbStrokes(sk1); i++)
+  {
+    stroke = sketchGetStroke(sk1,i);
+    for(int j=0; j < stroke->length; j++)
+    {
+      p = stroke->points[j];
+      dmin = minDistanceToSegment(sk2, p);
+      if(dmin > dmax)
+        dmax = dmin;
+    }
+  }
+
+  return dmax;
+}
+
 double sketchDistanceHausdorff(Sketch *sk1, Sketch *sk2)
-{}
+{
+  double dmax1 = maxDistancePoints(sk1,sk2);
+  double dmax2 = maxDistancePoints(sk2,sk1);
+
+  if (dmax1>=dmax2)
+    return dmax1;
+  else 
+    return dmax2;
+}
 
 double sketchDistanceCustom(Sketch *sk1, Sketch *sk2)
-{}
+{
+  return sketchDistanceHausdorff(sk1,sk2);                                                         // A faire
+}
 
