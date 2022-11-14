@@ -111,42 +111,18 @@ Sketch *sketchCompress(Sketch *sk, double dMax)
   return compactSk;
 }
 
-// Calcule la plus petite des distances entre un point p et chaque segment du sketch sk
-
-static double minDistanceToSegment(Sketch *sk, Point p)
+// Calcule distance = min(ds(p,s)), s = chaque stroke de sk, renvoie distanceMax si distance < distanceMax
+static double distance1(Sketch *sk, Point p, double distanceMax)
 {
-  double dmin = pow(10.0,37);                                                                      // dmin initial = plus grande valeur double (10^37) => dm(n) toujours < dm(0)
-  double de   = 0;
-  Point p1, p2;
-  PolyLine stroke;
-
-  for(int i=0; i < sketchGetNbStrokes(sk), i++)
-  {
-    stroke = sketchGetStroke(sk,i);
-    for(int j=0; j < stroke->length-1; j++)
-    {
-      if(stroke->length > 1)
-      {
-        p1 = stroke->points[j];
-        p2 = stroke->points[j+1];
-        de = plDistanceToSegment(p,p1,p2);
-        if (de < dmin)
-          dmin = de;
-      }
-        
-    }
-  }
-
-  return dmin;
+  double distance = 0;
+  for(int i=0; i < sketchGetNbStrokes(sk); i++)
+    distance = plDistanceToPolyline(p, sketchGetStroke(sk,i), distanceMax);
+  return distance;
 }
-
-// Calcule la plus grande des [minDistanceToSegment(sk2,p)] pour chaque point p du sketch sk1
-
-static double maxDistancePoints(Sketch *sk1, Sketch *sk2)
+// Calcule max(distance1) pour chaque point de sk1
+static double distance2(Sketch *sk1, Sketch *sk2)
 {
-  double dmax = 0;
-  double dmin = 0;
-  Point p;
+  double distance = 0;
   PolyLine stroke;
 
   for(int i=0; i < sketchGetNbStrokes(sk1); i++)
@@ -154,25 +130,21 @@ static double maxDistancePoints(Sketch *sk1, Sketch *sk2)
     stroke = sketchGetStroke(sk1,i);
     for(int j=0; j < stroke->length; j++)
     {
-      p = stroke->points[j];
-      dmin = minDistanceToSegment(sk2, p);
-      if(dmin > dmax)
-        dmax = dmin;
+      distance = distance1(sk2,stroke->points[j],distance);
     }
   }
 
-  return dmax;
+  return distance;
 }
 
 double sketchDistanceHausdorff(Sketch *sk1, Sketch *sk2)
 {
-  double dmax1 = maxDistancePoints(sk1,sk2);
-  double dmax2 = maxDistancePoints(sk2,sk1);
-
-  if (dmax1>=dmax2)
-    return dmax1;
-  else 
-    return dmax2;
+  double distance12 = distance2(sk1,sk2);
+  double distance21 = distance2(sk2,sk1);
+  if (distance12 >= distance21)
+    return distance12;
+  else
+    return distance21;
 }
 
 double sketchDistanceCustom(Sketch *sk1, Sketch *sk2)
