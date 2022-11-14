@@ -57,7 +57,7 @@ return processed;
 }
 PolyLine plCompression(PolyLine polyLine,double dMax, bool*dpoint ,int reallength){
 printf("length %d \n",polyLine.length);
-for (int i = 0,j=0; i < polyLine.length; j++) {
+for (int i = 1,j=0; i < polyLine.length; j++) {
  if(!dpoint[j]){
       printf("(%d,%d)\t",polyLine.points[j].x,polyLine.points[j].y);
       i++;
@@ -90,10 +90,10 @@ if(dtot>dMax){
   return polyLine;
   }else {
     printf("dtot<dMax\n");
-    for (int k = 1; k <reallength-1; k++) {
+    for (int k = 1; k <reallength; k++) {
       dpoint[k]=true;
     }
-    printf("clearing %d points\n",reallength-2);
+    printf("clearing %d points\n",reallength-1);
   return polyLine; 
   }
 
