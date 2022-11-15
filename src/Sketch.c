@@ -116,7 +116,7 @@ static double distance1(Sketch *sk, Point p, double distanceMax)
 {
   double distance = 0;
   for(int i=0; i < sketchGetNbStrokes(sk); i++)
-    distance = plDistanceToPolyline(p, sketchGetStroke(sk,i), distanceMax);
+    distance = plDistanceToPolyline(p, sketchGetStroke(sk,i), distanceMax);  // A modifier
   return distance;
 }
 // Calcule max(distance1) pour chaque point de sk1
