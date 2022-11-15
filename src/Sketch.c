@@ -100,7 +100,7 @@ Sketch *sketchCompress(Sketch *sk, double dMax)
   int nbPoints = 0;
   for(int i=0; i < nbStrokes; i++)
   {
-    strokes[i] = plCompress(sketchGetStroke(sk,i),dMax);
+    strokes[i] = plCompressPolyline(sketchGetStroke(sk,i),dMax);
     nbPoints  += strokes[i]->length;
   }
 
@@ -112,7 +112,7 @@ Sketch *sketchCompress(Sketch *sk, double dMax)
 }
 
 // Calcule distance = min(ds(p,s)), s = chaque stroke de sk, renvoie distanceMax si distance < distanceMax
-static double distance1(Sketch *sk, Point p, double distanceMax)
+static double distance1(Sketch *sk, Point p, double distanceMax) // A verifier
 {
   double distance = 0;
   for(int i=0; i < sketchGetNbStrokes(sk); i++)
@@ -120,7 +120,7 @@ static double distance1(Sketch *sk, Point p, double distanceMax)
   return distance;
 }
 // Calcule max(distance1) pour chaque point de sk1
-static double distance2(Sketch *sk1, Sketch *sk2)
+static double distance2(Sketch *sk1, Sketch *sk2) // A verifier
 {
   double distance = 0;
   PolyLine stroke;
