@@ -8,7 +8,7 @@ double plDistance(Point p1, Point p2){
 return sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y));
 }
 
-double plDistanceToSegment(Point p, Point p1, Point p2){
+double plDistanceToSegment(Point p, Point p1, Point p2){ // Attention prendre en compte si intersection n'est pas sur le segment
 // calculate the line
 int a=-(p2.y-p1.y);
 int b=(p2.x-p1.x);
@@ -31,7 +31,7 @@ for (i = 1; i < polyLine.length;i++) {
     {
       return distanceMax;
     }
-    if(lowest<tmp) 
+    if(lowest>tmp) 
     lowest=tmp;
   }
   return lowest;
@@ -55,6 +55,7 @@ free(delpoint);
 processed.points=clean;
 return processed;
 }
+
 PolyLine plCompression(PolyLine polyLine,double dMax, bool*dpoint ,int reallength){
 printf("length %d \n",polyLine.length);
 for (int i = 1,j=0; i < polyLine.length; j++) {
