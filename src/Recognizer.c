@@ -108,6 +108,7 @@ float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distan
 		correctLabel = dsGetLabelName(testset,dsGetLabel(testset,i));
 		if(strcmp(label,correctLabel)==0)
 			correctLabelFound++;
+		recFreekNN(KitsuNeNinetails);
 	}
 	float accuracy = correctLabelFound / n;
 	return accuracy;		
