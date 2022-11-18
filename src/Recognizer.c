@@ -1,5 +1,6 @@
 #include "Dataset.h"
 #include "Recognizer.h"
+#include <string.h>
 
 // A compléter
 
@@ -85,7 +86,7 @@ char *recGetMajorityLabel(kNN *knn)
 		if(numbers[i]>numbers[majority])
 			majority = i;
 		else if(numbers[i]==numbers[majority])
-			if (totalDistances[i] < totalDistances[majority]) // je gère les égalités en comparant les sommes de toutes distances => minimiser somme erreurs (=meilleure solution?)
+			if (totalDistances[i] < totalDistances[majority]) // je gère les égalités en comparant les sommes de toutes distances => minimiser somme erreurs (=?meilleure solution)
 				majority = i;
 	}
 
@@ -95,5 +96,19 @@ char *recGetMajorityLabel(kNN *knn)
 
 float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distance)(Sketch *, Sketch *),FILE *out)
 {
+	int n                 = dsGetNbSketches(testset);
+	int correctLabelFound = 0;
+	char *label;
+	char *correctLabel;
 	
+	for(int i=0; i < n; i++)
+	{
+		kNN *KitsuNeNinetails = recNearestNeighbors(dsGetSketch(testset, dataset, k, distance));   // plus sûr pour pointeur fct
+		label = recGetMajorityLabel(KitsuNeNinetails);
+		correctLabel = dsGetLabelName(testset,dsGetLabel(testset,i));
+		if(strcmp(label,correctLabel)==0)
+			correctLabelFound++;
+	}
+	float accuracy = correctLabelFound / n;
+	return accuracy;		
 }
