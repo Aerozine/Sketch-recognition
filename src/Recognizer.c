@@ -53,10 +53,47 @@ kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sket
 }
 
 void recFreekNN(kNN *knn)
-{}
+{
+	free(knn->neighbors);
+	free(knn->distance);
+	free(knn);
+	return;
+}
 
 char *recGetMajorityLabel(kNN *knn)
-{}
+{
+	int n     = dsGetNbLabelNames(knn->dataset);
+	int label = 0;
+	int numbers[n];
+	float totalDistances[n];
+	for(int i=0; i < n; i++)
+		{
+			numbers[i]        = 0;
+			totalDistances[i] = 0;
+		}
+
+	for(int i=0; i < knn->k; i++)
+		{
+			label = dsGetLabel(knn->neighbors[i])
+			numbers[label]++;
+			totalDistances[label] += knn->distance[i];
+		}
+
+	int majority = 0;
+	for(int i=1; i < n; i++)
+	{
+		if(numbers[i]>numbers[majority])
+			majority = i;
+		else if(numbers[i]==numbers[majority])
+			if (totalDistances[i] < totalDistances[majority]) // je gère les égalités en comparant les sommes de toutes distances => minimiser somme erreurs (=meilleure solution?)
+				majority = i;
+	}
+
+	return dsGetLabelName(knn->dataset,majority);
+
+}
 
 float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distance)(Sketch *, Sketch *),FILE *out)
-{}
+{
+	
+}
