@@ -45,7 +45,13 @@ Sketch *sketchCreate(int nbPoints, Point *points, bool *strokestarts)
   for(int i=0; i < nbStrokes; i++)
   {
       int length;
-    for(length=0; (lastEnd+length) < nbPoints && !strokestarts[lastEnd+length]; length++);     
+      //inerloop broken -> leng=0 bc strokestart=1
+    printf("lastend(%d)<nbpoint(%d) and strokestart[lastend+length](%d)\n",lastEnd,nbPoints,strokestarts[lastEnd]);
+    for(length=1; (lastEnd+length) < nbPoints && !strokestarts[lastEnd+length]; length++){
+    printf("lastend+length(%d+%d)<nbpoint(%d) and strokestart[lastend+length](%d)\n",lastEnd,length,nbPoints,strokestarts[lastEnd]);
+      }; 
+  printf("length (%d)\n",length); 
+
   // compter longueur à chaque stroke
 
     Point *stPoints = malloc(length*sizeof(Point));

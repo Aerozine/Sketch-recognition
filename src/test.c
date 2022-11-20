@@ -78,8 +78,8 @@ int nbstroke= sketchGetNbStrokes(draw);
   for (int i = 0; i < nbstroke; i++) {
     PolyLine poly= sketchGetStroke(draw,i);
     printf("-->%d polyline with size %d \n",i,poly.length);
-   for (int k = 0; k <poly.length ; i++) {
-   printf("(%d,%d)\n",poly.points[k].x,poly.points[k].y); 
+   for (int k = 0; k <poly.length ; k++) {
+   printf("(%d,%d)",poly.points[k].x,poly.points[k].y); 
    } 
     printf("\n");
   }
