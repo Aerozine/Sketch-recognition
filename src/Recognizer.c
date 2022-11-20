@@ -2,8 +2,6 @@
 #include "Recognizer.h"
 #include <string.h>
 #include <stdlib.h>
-// A compléter
-
 
 kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sketch *, Sketch *))
 {
@@ -29,7 +27,7 @@ kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sket
 	double allDistances[dsGetNbSketches(ds)];
 
 	for(int i=0; i < dsGetNbSketches(ds); i++)
-		allDistances[i] = distance(sk,dsGetSketch(i));// il manque des argument a dsGetSketch                 // je suis plus sûr syntaxe pour pointeur fct
+		allDistances[i] = distance(sk,dsGetSketch(ds,i)); // je suis plus sûr syntaxe pour pointeur fct
 
 	int actualNeighbor = 0;
 	int lastNeighbor   = 0;
@@ -46,9 +44,9 @@ kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sket
 	}
 
 	KitsuNeNinetails->k         = k;
-	KitsuNeNinetails->Dataset   = ds;
+	KitsuNeNinetails->dataset   = ds;
 	KitsuNeNinetails->neighbors = neighbors;
-	KitsuNeNinetails->distance  = distance;
+	KitsuNeNinetails->distances = distances;
 
 	return KitsuNeNinetails;
 }
@@ -66,7 +64,7 @@ char *recGetMajorityLabel(kNN *knn)
 	int n     = dsGetNbLabelNames(knn->dataset);
 	int label = 0;
 	int numbers[n];
-	float totalDistances[n];
+	double totalDistances[n];
 	for(int i=0; i < n; i++)
 		{
 			numbers[i]        = 0;
@@ -75,7 +73,7 @@ char *recGetMajorityLabel(kNN *knn)
 
 	for(int i=0; i < knn->k; i++)
 		{
-			label = dsGetLabel(knn->neighbors[i]);
+			label = dsGetLabel(knn->dataset,knn->neighbors[i]);
 			numbers[label]++;
 			totalDistances[label] += knn->distances[i];
 		}
@@ -96,6 +94,7 @@ char *recGetMajorityLabel(kNN *knn)
 
 float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distance)(Sketch *, Sketch *),FILE *out)
 {
+	// gerer FILE *out
 	int n                 = dsGetNbSketches(testset);
 	int correctLabelFound = 0;
 	char *label;
@@ -103,13 +102,13 @@ float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distan
 	
 	for(int i=0; i < n; i++)
 	{
-		kNN *KitsuNeNinetails = recNearestNeighbors(dsGetSketch(testset, dataset, k, distance));   // plus sûr pour pointeur fct
+		kNN *KitsuNeNinetails = recNearestNeighbors(dsGetSketch(testset,i), referenceset, k, distance);   // plus sûr pour pointeur fct
 		label = recGetMajorityLabel(KitsuNeNinetails);
 		correctLabel = dsGetLabelName(testset,dsGetLabel(testset,i));
 		if(strcmp(label,correctLabel)==0)
 			correctLabelFound++;
 		recFreekNN(KitsuNeNinetails);
 	}
-	float accuracy = correctLabelFound / n;
+	float accuracy = 100 * (float) correctLabelFound / (float) n;
 	return accuracy;		
 }
