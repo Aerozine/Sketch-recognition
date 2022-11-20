@@ -1,7 +1,7 @@
 #include "Dataset.h"
 #include "Recognizer.h"
 #include <string.h>
-
+#include <stdlib.h>
 // A compléter
 
 
@@ -29,7 +29,7 @@ kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sket
 	double allDistances[dsGetNbSketches(ds)];
 
 	for(int i=0; i < dsGetNbSketches(ds); i++)
-		allDistances[i] = distance(sk,dsGetSketch(i));                 // je suis plus sûr syntaxe pour pointeur fct
+		allDistances[i] = distance(sk,dsGetSketch(i));// il manque des argument a dsGetSketch                 // je suis plus sûr syntaxe pour pointeur fct
 
 	int actualNeighbor = 0;
 	int lastNeighbor   = 0;
@@ -42,7 +42,7 @@ kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sket
 
 		lastNeighbor = actualNeighbor;
 		neighbors[i] = actualNeighbor;
-		distance[i]  = allDistances[actualNeighbor];
+		distances[i]  = allDistances[actualNeighbor];
 	}
 
 	KitsuNeNinetails->k         = k;
@@ -56,7 +56,7 @@ kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sket
 void recFreekNN(kNN *knn)
 {
 	free(knn->neighbors);
-	free(knn->distance);
+	free(knn->distances);
 	free(knn);
 	return;
 }
@@ -75,9 +75,9 @@ char *recGetMajorityLabel(kNN *knn)
 
 	for(int i=0; i < knn->k; i++)
 		{
-			label = dsGetLabel(knn->neighbors[i])
+			label = dsGetLabel(knn->neighbors[i]);
 			numbers[label]++;
-			totalDistances[label] += knn->distance[i];
+			totalDistances[label] += knn->distances[i];
 		}
 
 	int majority = 0;

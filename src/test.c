@@ -23,12 +23,12 @@ printf("%f---\n",plDistanceToPolyline(tab[0],compress,dMax));
 
 void testcompress();
 void testcompress(){
-    int y = 5;
+    int y = 6;
     Point *tab = malloc(sizeof(Point) * y); 
 
   //for( int i = 0; i < y; i++)
   //{
-   tab[0].x = 1;tab[1].x = 1;tab[2].x = 6;tab[3].x = 9;tab[4].x = 11;
+   tab[0].x = 1;tab[1].x = 1;tab[2].x = 6;tab[3].x = 9;tab[4].x = 11;tab[5].x=11;tab[5].y=1;
    tab[0].y = 1;tab[1].y = 6;tab[2].y = 6;tab[3].y = 3;tab[4].y = 1 ;
    //tab[0].x = 1;tab[1].x = 6;tab[2].x = 9;tab[3].x = 11;
    //tab[0].y = 1;tab[1].y = 6;tab[2].y = 3;tab[3].y = 1 ;
@@ -43,7 +43,7 @@ for(int i = 0; i < y; i++)
 printf("compression: \n");
 
 PolyLine compress;
-compress.length = y-1;
+compress.length = y;
 compress.points = tab;
 double dMax = 0.2;
 PolyLine new;
@@ -62,8 +62,8 @@ printf("\n");
 }
 void checkplDistanceToSegment(){
   Point a={.x=1,.y=1};
-  Point b={.x=1,.y=1};
-  Point c={.x=2,.y=0};
+  Point b={.x=11,.y=1};
+  Point c={.x=6,.y=1};
   printf("%f\n",plDistanceToSegment(c,a,b));
 }
 void allocsketch(){
@@ -103,9 +103,9 @@ sketchFree(draw);
 
 
 int main(){
-  //checkplDistanceToSegment();
+ checkplDistanceToSegment();
   //polydist();
 //  testcompress();
-  allocsketch();
+//  allocsketch();
   return 0;
 }

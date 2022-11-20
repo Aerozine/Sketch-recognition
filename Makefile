@@ -1,6 +1,6 @@
 # Macros
 CC = gcc
-CFLAGS = -std=c99 --pedantic -Wall -Wextra -Wmissing-prototypes
+CFLAGS = -std=c99 --pedantic -Wall -Wextra -Wmissing-prototypes -flto -O2 -march=native 
 #WARNINGS = -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
             #-Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
             #-Wredundant-decls -Wnested-externs -Winline \
