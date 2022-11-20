@@ -132,14 +132,18 @@ Sketch *sketchCompress(Sketch *sk, double dMax)
 
 
 // Calcule distance = min(ds(p,s)), s = chaque stroke de sk, renvoie distanceMax si distance < distanceMax
-static double distance1(Sketch *sk, Point p, double distanceMax) 
-// A verifier
+static double distance1(Sketch *sk, Point p, double distanceMax)
 {
   double distance = 0;
+  double dmin = INFINITY;
   for(int i=0; i < sketchGetNbStrokes(sk); i++)
+  {
     distance = plDistanceToPolyline(p, sketchGetStroke(sk,i), distanceMax);  
-// A modifier
-  return distance;
+    if (distance<dmin)
+      dmin = distance;
+  }
+
+  return dmin;
 }
 
 // Calcule max(distance1) pour chaque point de sk1
