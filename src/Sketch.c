@@ -44,10 +44,8 @@ Sketch *sketchCreate(int nbPoints, Point *points, bool *strokestarts)
   int lastEnd = 0;
   for(int i=0; i < nbStrokes; i++)
   {
-      int length;
-      //inerloop broken -> leng=0 bc strokestart=1
-    for(length=1; (lastEnd+length) < nbPoints && !strokestarts[lastEnd+length]; length++){
-      }; 
+
+    for(int length=1; (lastEnd+length) < nbPoints && !strokestarts[lastEnd+length]; length++); 
 
   // compter longueur à chaque stroke
 
