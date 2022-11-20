@@ -12,20 +12,23 @@ struct sketch_t
 Sketch *sketchCreate(int nbPoints, Point *points, bool *strokestarts)
 {
   Sketch *sk = malloc(sizeof(Sketch));
-  if(!sk)
+  unsigned*sizeofstrokes=malloc(sizeof(unsigned)*nbPoints);
+  if(!sk|| !sizeofstrokes)
     return NULL;
   int nbStrokes = 0;
-  for(int i=0; i < nbPoints; i++)                                                                  
+  for(int i=0,tmp=0,j=0; i < nbPoints; i++)                                                                  
   // compter nombre de strokes
-    if(strokestarts[i])
+    if(strokestarts[i]){
       nbStrokes++;
-
+      sizeofstrokes[j]=i-tmp;
+      tmp=i;
+      j++;
+    }
   PolyLine *strokes = malloc(nbStrokes*sizeof(PolyLine));
   if(!strokes)
   {
     free(sk);
-    return NULL;
-    // maybe using exit bc if sk cannot be allocated, the rest of the code doesnt work anyway
+    abort(); 
   }
   /*
     *
@@ -44,8 +47,8 @@ Sketch *sketchCreate(int nbPoints, Point *points, bool *strokestarts)
   int lastEnd = 0;
   for(int i=0; i < nbStrokes; i++)
   {
-
-    for(int length=1; (lastEnd+length) < nbPoints && !strokestarts[lastEnd+length]; length++); 
+    int length;
+    for(length=1; (lastEnd+length) < nbPoints && !strokestarts[lastEnd+length]; length++); 
 
   // compter longueur à chaque stroke
 
