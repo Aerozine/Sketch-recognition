@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "PointLine.h"
+#include "Sketch.h"
 void checkplDistanceToSegment();
 
 
@@ -65,9 +66,35 @@ void checkplDistanceToSegment(){
   Point c={.x=2,.y=0};
   printf("%f\n",plDistanceToSegment(c,a,b));
 }
+void allocsketch(){
+ Point tabofpoint[12]={{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1}};
+ Point tabofpoint2[12]={{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2}};
+ bool stokestar[]={1,0,0,0,0,0,0,1,0,0,0,0};
+  Sketch*draw=sketchCreate(12,tabofpoint,stokestar);
+  Sketch*draw2=sketchCreate(12,tabofpoint2,stokestar);
+  int nbpoint=sketchGetNbPoints(draw);
+int nbstroke= sketchGetNbStrokes(draw);
+  printf("|------------print all polyline---------------|\n");
+  for (int i = 0; i < nbstroke; i++) {
+    PolyLine poly= sketchGetStroke(draw,i);
+    printf("-->%d polyline with size %d \n",i,poly.length);
+   for (int k = 0; k <poly.length ; i++) {
+   printf("(%d,%d)\n",poly.points[k].x,poly.points[k].y); 
+   } 
+    printf("\n");
+  }
+printf("nb of point:\t%d\nnb of stroke:\t%d\n",nbpoint,nbstroke);
+sketchFree(draw);
+}
+
+
+
+
+
 int main(){
   //checkplDistanceToSegment();
   //polydist();
-  testcompress();
+//  testcompress();
+  allocsketch();
   return 0;
 }

@@ -23,7 +23,8 @@ $(BUILDDIR)%.o: $(SRCDIR)%.c
 all: $(ALL)
 
 $(TARGET): $(BUILDDIR)main.o $(BUILDDIR)PointLine.o $(BUILDDIR)Sketch.o $(BUILDDIR)Dataset.o $(BUILDDIR)Recognizer.o $(BUILDDIR)easyppm.o
-$(TTARGET): $(BUILDDIR)PointLine.o $(BUILDDIR)Sketch.o $(BUILDDIR)Dataset.o $(BUILDDIR)Recognizer.o $(BUILDDIR)easyppm.o $(BUILDDIR)test.o
+$(TTARGET): $(BUILDDIR)PointLine.o $(BUILDDIR)Sketch.o $(BUILDDIR)test.o
+#$(BUILDDIR)Dataset.o $(BUILDDIR)Recognizer.o $(BUILDDIR)easyppm.o $(BUILDDIR)test.o
 
 $(ALL):
 	$(CC) -o $(BINDIR)$@ $^ $(LDFLAGS) 

@@ -1,7 +1,7 @@
 #include "PointLine.h"
 #include "Sketch.h"
 #include <math.h>
-
+#include <stdlib.h>
 struct sketch_t
 {
   int nbPoints;
@@ -11,34 +11,50 @@ struct sketch_t
 
 Sketch *sketchCreate(int nbPoints, Point *points, bool *strokestarts)
 {
-  Sketch *sk = malloc(sizeof(Sketch))
+  Sketch *sk = malloc(sizeof(Sketch));
   if(!sk)
     return NULL;
-
   int nbStrokes = 0;
-  for(int i=0; i < nbPoints; i++)                                                                  // compter nombre de strokes
+  for(int i=0; i < nbPoints; i++)                                                                  
+  // compter nombre de strokes
     if(strokestarts[i])
       nbStrokes++;
 
-  PolyLine *strokes = malloc(nbStrokes*sizeof(PolyLine))
+  PolyLine *strokes = malloc(nbStrokes*sizeof(PolyLine));
   if(!strokes)
   {
     free(sk);
     return NULL;
+    // maybe using exit bc if sk cannot be allocated, the rest of the code doesnt work anyway
   }
+  /*
+    *
+    *why not storing all strokes size on an array ? 
+      ->reduce code complexity and loop on VLA
+      int lastrefpoint,strokecounterk=0
+      for i in nbpoint
+        if(strokestarts[i] or last point)
+          malloc(sizeof(point(acual-lastrefpoint)))
+          memcpy(lastrefpoint,strokes[k].points,sizeof(point)*(actual-lastrefpoint))
+          k++;
 
+    *
+    *
+    */
   int lastEnd = 0;
-
   for(int i=0; i < nbStrokes; i++)
   {
-    for(int length=0; (lastEnd+length) < nbPoints && !strokestarts[lastEnd+length]; length++);     // compter longueur à chaque stroke
+      int length;
+    for(length=0; (lastEnd+length) < nbPoints && !strokestarts[lastEnd+length]; length++);     
+  // compter longueur à chaque stroke
 
     Point *stPoints = malloc(length*sizeof(Point));
     if(!stPoints)
     {
       for(int k=0; k < i; k++)
-        free(strokes[k]->points);                                                                  // tout free si erreur d'allocation
-      free(strokes)
+        free(strokes[k].points);                                                                  
+  // tout free si erreur d'allocation
+      free(strokes);
       free(sk);
       return NULL;
     }
@@ -46,8 +62,8 @@ Sketch *sketchCreate(int nbPoints, Point *points, bool *strokestarts)
     for(int k=0; k < length; k++)
       stPoints[k] = points[lastEnd+k];
 
-    strokes[i]->points = stPoints;
-    strokes[i]->length = length;
+    strokes[i].points = stPoints;
+    strokes[i].length = length;
     lastEnd += length;
   }
 
@@ -61,7 +77,7 @@ Sketch *sketchCreate(int nbPoints, Point *points, bool *strokestarts)
 void sketchFree(Sketch *sk)
 {
   for(int i=0; i < sketchGetNbStrokes(sk); i++)
-    free(sk->strokes[i]->points);
+    free(sk->strokes[i].points);
   free(sk->strokes);
   free(sk);
   return;
@@ -101,7 +117,7 @@ Sketch *sketchCompress(Sketch *sk, double dMax)
   for(int i=0; i < nbStrokes; i++)
   {
     strokes[i] = plCompressPolyline(sketchGetStroke(sk,i),dMax);
-    nbPoints  += strokes[i]->length;
+    nbPoints  += strokes[i].length;
   }
 
   compactSk->nbPoints  = nbPoints;
@@ -111,16 +127,21 @@ Sketch *sketchCompress(Sketch *sk, double dMax)
   return compactSk;
 }
 
+
 // Calcule distance = min(ds(p,s)), s = chaque stroke de sk, renvoie distanceMax si distance < distanceMax
-static double distance1(Sketch *sk, Point p, double distanceMax) // A verifier
+static double distance1(Sketch *sk, Point p, double distanceMax) 
+// A verifier
 {
   double distance = 0;
   for(int i=0; i < sketchGetNbStrokes(sk); i++)
-    distance = plDistanceToPolyline(p, sketchGetStroke(sk,i), distanceMax);  // A modifier
+    distance = plDistanceToPolyline(p, sketchGetStroke(sk,i), distanceMax);  
+// A modifier
   return distance;
 }
+
 // Calcule max(distance1) pour chaque point de sk1
-static double distance2(Sketch *sk1, Sketch *sk2) // A verifier
+static double distance2(Sketch *sk1, Sketch *sk2) 
+// A verifier
 {
   double distance = 0;
   PolyLine stroke;
@@ -128,9 +149,9 @@ static double distance2(Sketch *sk1, Sketch *sk2) // A verifier
   for(int i=0; i < sketchGetNbStrokes(sk1); i++)
   {
     stroke = sketchGetStroke(sk1,i);
-    for(int j=0; j < stroke->length; j++)
+    for(int j=0; j < stroke.length; j++)
     {
-      distance = distance1(sk2,stroke->points[j],distance);
+      distance = distance1(sk2,stroke.points[j],distance);
     }
   }
 
@@ -149,6 +170,7 @@ double sketchDistanceHausdorff(Sketch *sk1, Sketch *sk2)
 
 double sketchDistanceCustom(Sketch *sk1, Sketch *sk2)
 {
-  return sketchDistanceHausdorff(sk1,sk2);                                                         // A faire
+  return sketchDistanceHausdorff(sk1,sk2);                                                         
+// A faire
 }
 
