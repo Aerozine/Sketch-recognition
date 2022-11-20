@@ -61,9 +61,9 @@ printf("\n");
 
 }
 void checkplDistanceToSegment(){
-  Point a={.x=1,.y=1};
-  Point b={.x=11,.y=1};
-  Point c={.x=6,.y=1};
+  Point a={.x=0,.y=0};
+  Point b={.x=1,.y=0};
+  Point c={.x=0,.y=1};
   printf("%f\n",plDistanceToSegment(c,a,b));
 }
 #define NBPOINTS1 2

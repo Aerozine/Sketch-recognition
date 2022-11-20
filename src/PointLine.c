@@ -46,9 +46,11 @@ double plDistanceToSegment(Point p, Point p1, Point p2)
     }
     else
     {
-        tmp.x = p1.x + param * C;
-        tmp.y = p1.y + param * D;
-        // A modif ->doubles
+        //tmp.x = p1.x + param * C;
+        //tmp.y = p1.y + param * D;
+        double dx = (double)p1.x + param * C - (double)p.x ;
+        double dy= (double)p1.y + param * D - (double)p.y;
+        return sqrt(dx*dx+dy*dy) ;
     }
     return plDistance(p, tmp);
 }
