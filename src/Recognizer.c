@@ -84,7 +84,8 @@ char *recGetMajorityLabel(kNN *knn)
 		if(numbers[i]>numbers[majority])
 			majority = i;
 		else if(numbers[i]==numbers[majority])
-			if (totalDistances[i] < totalDistances[majority]) // je gère les égalités en comparant les sommes de toutes distances => minimiser somme erreurs (=?meilleure solution)
+			if (totalDistances[i] < totalDistances[majority])
+			// je gère les égalités en comparant les sommes de toutes distances => minimiser somme erreurs (=?meilleure solution)
 				majority = i;
 	}
 
@@ -102,7 +103,7 @@ float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distan
 	
 	for(int i=0; i < n; i++)
 	{
-		kNN *KitsuNeNinetails = recNearestNeighbors(dsGetSketch(testset,i), referenceset, k, distance);   // plus sûr pour pointeur fct
+		kNN *KitsuNeNinetails = recNearestNeighbors(dsGetSketch(testset,i), referenceset, k, distance);
 		label = recGetMajorityLabel(KitsuNeNinetails);
 		correctLabel = dsGetLabelName(testset,dsGetLabel(testset,i));
 		if(strcmp(label,correctLabel)==0)
@@ -112,3 +113,6 @@ float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distan
 	float accuracy = 100 * (float) correctLabelFound / (float) n;
 	return accuracy;		
 }
+
+/* boucle : if out != NULL
+             fprintf(out,"infos")
