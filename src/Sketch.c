@@ -138,17 +138,18 @@ static double distance1(Sketch *sk, Point p, double distanceMax)
   double dmin = INFINITY;
   for(int i=0; i < sketchGetNbStrokes(sk); i++)
   {
-    distance = plDistanceToPolyline(p, sketchGetStroke(sk,i), distanceMax);  
+    distance = plDistanceToPolyline(p, sketchGetStroke(sk,i), distanceMax);
     if (distance<dmin)
       dmin = distance;
+    if (distance <= distanceMax)
+      return distanceMax;
   }
 
   return dmin;
 }
 
 // Calcule max(distance1) pour chaque point de sk1
-static double distance2(Sketch *sk1, Sketch *sk2) 
-// A verifier
+static double distance2(Sketch *sk1, Sketch *sk2)
 {
   double distance = 0;
   PolyLine stroke;

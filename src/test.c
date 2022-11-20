@@ -66,12 +66,15 @@ void checkplDistanceToSegment(){
   Point c={.x=6,.y=1};
   printf("%f\n",plDistanceToSegment(c,a,b));
 }
+#define NBPOINTS1 2
+#define NBPOINTS2 2
 void allocsketch(){
- Point tabofpoint[12]={{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=2,.y=2}};
- Point tabofpoint2[12]={{.x=0,.y=0},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2}};
- bool stokestar[]={1,0,0,0,0,0,0,1,0,0,0,0};
-  Sketch*draw=sketchCreate(12,tabofpoint,stokestar);
-  Sketch*draw2=sketchCreate(12,tabofpoint2,stokestar);
+ Point tabofpoint[NBPOINTS1]={{.x=0,.y=1},{.x=1,.y=0}};
+ Point tabofpoint2[NBPOINTS2]={{.x=0,.y=0},{.x=1,.y=1}};
+ bool stokestar1[]={1,0};
+ bool stokestar2[]={1,0};
+  Sketch*draw=sketchCreate(NBPOINTS1,tabofpoint,stokestar1);
+  Sketch*draw2=sketchCreate(NBPOINTS2,tabofpoint2,stokestar2);
   int nbpoint=sketchGetNbPoints(draw);
 int nbstroke= sketchGetNbStrokes(draw);
 printf("|------------print all polyline---------------|\n");

@@ -26,7 +26,7 @@ double plDistanceToSegment(Point p, Point p1, Point p2)
     }
     else
     {
-        return 0;
+        return plDistance(p,p1);
     }
     /*
      *If the point is closer to an extremity,
@@ -48,6 +48,7 @@ double plDistanceToSegment(Point p, Point p1, Point p2)
     {
         tmp.x = p1.x + param * C;
         tmp.y = p1.y + param * D;
+        // A modif ->doubles
     }
     return plDistance(p, tmp);
 }
@@ -86,7 +87,6 @@ PolyLine plCompressPolyline(PolyLine poly, double dMax)
             i++;
         }
     }
-    printf("\n");
     free(delpoint);
     return compressed;
 }
