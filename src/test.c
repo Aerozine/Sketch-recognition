@@ -67,8 +67,8 @@ void checkplDistanceToSegment(){
   printf("%f\n",plDistanceToSegment(c,a,b));
 }
 void allocsketch(){
- Point tabofpoint[12]={{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1}};
- Point tabofpoint2[12]={{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2},{.x=2,.y=2}};
+ Point tabofpoint[12]={{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=1,.y=1},{.x=2,.y=2}};
+ Point tabofpoint2[12]={{.x=0,.y=0},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2},{.x=0,.y=2}};
  bool stokestar[]={1,0,0,0,0,0,0,1,0,0,0,0};
   Sketch*draw=sketchCreate(12,tabofpoint,stokestar);
   Sketch*draw2=sketchCreate(12,tabofpoint2,stokestar);
@@ -84,21 +84,21 @@ printf("|------------print all polyline---------------|\n");
     printf("\n");
   }
 printf("nb of point:\t%d\nnb of stroke:\t%d\n",nbpoint,nbstroke);
-printf("|------------------compression---------------|\n");
+printf("|------------------compression----------------|\n");
 Sketch *beautified=sketchCompress(draw,0.2);
-    nbstroke=sketchGetNbStrokes(draw);
+    nbstroke=sketchGetNbStrokes(beautified);
   for (int i = 0; i < nbstroke; i++) {
-    PolyLine poly= sketchGetStroke(draw,i);
+    PolyLine poly= sketchGetStroke(beautified,i);
     printf("-->%d polyline with size %d \n",i,poly.length);
    for (int k = 0; k <poly.length ; k++) {
    printf("(%d,%d)",poly.points[k].x,poly.points[k].y); 
    } 
     printf("\n");
   }
+printf("|------------------Hausdroff<3-----------------|\n");
+printf("%f\n",sketchDistanceHausdorff(draw, draw2));
 sketchFree(draw);
 }
-
-
 
 
 
@@ -106,6 +106,6 @@ int main(){
  checkplDistanceToSegment();
   //polydist();
 //  testcompress();
-//  allocsketch();
+  allocsketch();
   return 0;
 }
