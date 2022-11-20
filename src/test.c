@@ -74,7 +74,7 @@ void allocsketch(){
   Sketch*draw2=sketchCreate(12,tabofpoint2,stokestar);
   int nbpoint=sketchGetNbPoints(draw);
 int nbstroke= sketchGetNbStrokes(draw);
-  printf("|------------print all polyline---------------|\n");
+printf("|------------print all polyline---------------|\n");
   for (int i = 0; i < nbstroke; i++) {
     PolyLine poly= sketchGetStroke(draw,i);
     printf("-->%d polyline with size %d \n",i,poly.length);
@@ -84,6 +84,17 @@ int nbstroke= sketchGetNbStrokes(draw);
     printf("\n");
   }
 printf("nb of point:\t%d\nnb of stroke:\t%d\n",nbpoint,nbstroke);
+printf("|------------------compression---------------|\n");
+Sketch *beautified=sketchCompress(draw,0.2);
+    nbstroke=sketchGetNbStrokes(draw);
+  for (int i = 0; i < nbstroke; i++) {
+    PolyLine poly= sketchGetStroke(draw,i);
+    printf("-->%d polyline with size %d \n",i,poly.length);
+   for (int k = 0; k <poly.length ; k++) {
+   printf("(%d,%d)",poly.points[k].x,poly.points[k].y); 
+   } 
+    printf("\n");
+  }
 sketchFree(draw);
 }
 
