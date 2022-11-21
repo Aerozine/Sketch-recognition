@@ -177,9 +177,18 @@ float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distan
 		correctLabel = dsGetLabelName(testset,dsGetLabel(testset,i));
 		if(strcmp(label,correctLabel)==0)
 			correctLabelFound++;
+		else
+		{
+			printf("neighbors: ");
+			for(int j=0; j < k; j++)
+			{
+				printf("%s (%f), ",dsGetLabelName(referenceset,dsGetLabel(referenceset,KitsuNeNinetails->neighbors[j])),KitsuNeNinetails->distances[j]);
+			}
+			printf("\n");
+		}
 		if (out)
 		{
-			fprintf(out, "Testing sketch n°%d /%d :\n",i,n);
+			fprintf(out, "Testing sketch n°%d /%d :\n",i+1,n);
 			fprintf(out, "Label found: %s , Correct label: %s\n",label,correctLabel);
 			fprintf(out, "Correct labels found: %d/%d\n",correctLabelFound,i+1);
 			// Il y a un bug sur le label "key" qui est bien compté et comparé mais n'est pas print (probablement à cause du symbole de retour à la ligne)

@@ -36,7 +36,7 @@ clean:
 	rm -f $(BUILDDIR)*.o $(BINDIR)$(TTARGET) $(BINDIR)$(TARGET)
 
 run: $(TARGET)
-	$(BINDIR)$(TARGET) $(DATADIR)trainingset.txt $(DATADIR)testset.txt
+	$(BINDIR)$(TARGET) -d custom $(DATADIR)trainingset.txt $(DATADIR)testset.txt
 
 runtest: $(TTARGET)
 	$(BINDIR)$(TTARGET) $(DATADIR)trainingset.txt $(DATADIR)testset.txt

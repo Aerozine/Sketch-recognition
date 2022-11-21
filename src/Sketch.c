@@ -174,9 +174,61 @@ double sketchDistanceHausdorff(Sketch *sk1, Sketch *sk2)
     return distance21;
 }
 
+// Calcule max(distance1) pour chaque point de points 
+static double distance3(Point *points, int nbPoints, Sketch *sk2)
+{
+  double distance = 0;
+
+  for(int i=0; i < nbPoints; i++)
+  {
+    distance = distance1(sk2,points[i],distance);
+  }
+
+  return distance;
+}
+
+static Point *extractPoints(Sketch *sk)
+{
+  Point *points = malloc(sketchGetNbPoints(sk)*sizeof(Point));
+  int k = 0;
+  if(!points)
+    return NULL;
+  PolyLine stroke;
+  for(int i=0; i<sketchGetNbStrokes(sk);i++)
+  {
+    stroke = sketchGetStroke(sk,i);
+    for(int j=0;j<stroke.length;j++)
+    {
+      points[k++] = stroke.points[j];
+    }
+  }
+  return points;
+}
+static void randomize(Point points[],int size)
+{
+  int randomizer;
+  Point tmp;
+  for(int i=0; i<size; i++)
+  {
+    randomizer = rand() % size;
+    tmp = points[i];
+    points[i] = points[randomizer];
+    points[randomizer] = tmp;
+  }
+}
 double sketchDistanceCustom(Sketch *sk1, Sketch *sk2)
 {
-  return sketchDistanceHausdorff(sk1,sk2);                                                         
-// A faire
+  Point *points1 = extractPoints(sk1);
+  Point *points2 = extractPoints(sk2);
+  randomize(points1,sketchGetNbPoints(sk1));
+  randomize(points2,sketchGetNbPoints(sk2));
+  double distance12 = distance3(points1,sketchGetNbPoints(sk1),sk2);
+  double distance21 = distance3(points2,sketchGetNbPoints(sk2),sk1);
+  free(points1);
+  free(points2);
+  if(distance12 >= distance21)
+    return distance12;
+  else
+    return distance21;
 }
 
