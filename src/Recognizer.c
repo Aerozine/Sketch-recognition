@@ -27,7 +27,7 @@ kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sket
 	double allDistances[dsGetNbSketches(ds)];
 
 	for(int i=0; i < dsGetNbSketches(ds); i++)
-		allDistances[i] = distance(sk,dsGetSketch(ds,i)); // je suis plus sûr syntaxe pour pointeur fct
+		allDistances[i] = distance(sk,dsGetSketch(ds,i));
 
 	int actualNeighbor = 0;
 	int lastNeighbor   = 0;
@@ -88,14 +88,13 @@ char *recGetMajorityLabel(kNN *knn)
 			// je gère les égalités en comparant les sommes de toutes distances => minimiser somme erreurs (=?meilleure solution)
 				majority = i;
 	}
-
+	
 	return dsGetLabelName(knn->dataset,majority);
 
 }
 
 float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distance)(Sketch *, Sketch *),FILE *out)
 {
-	// gerer FILE *out
 	int n                 = dsGetNbSketches(testset);
 	int correctLabelFound = 0;
 	char *label;
@@ -108,11 +107,15 @@ float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distan
 		correctLabel = dsGetLabelName(testset,dsGetLabel(testset,i));
 		if(strcmp(label,correctLabel)==0)
 			correctLabelFound++;
+		if (out)
+		{
+			fprintf(out, "Testing sketch n°%d /%d :\n",i,n);
+			fprintf(out, "Label found: %s , Correct label: %s\n",label,correctLabel);
+			fprintf(out, "Correct labels found: %d/%d\n",correctLabelFound,i+1);
+			// Il y a un bug sur le label "key" qui est bien compté et comparé mais n'est pas print (probablement à cause du symbole de retour à la ligne)
+		}
 		recFreekNN(KitsuNeNinetails);
 	}
 	float accuracy = 100 * (float) correctLabelFound / (float) n;
-	return accuracy;		
+	return accuracy;
 }
-
-/* boucle : if out != NULL
-             fprintf(out,"infos")

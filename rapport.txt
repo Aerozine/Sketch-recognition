@@ -2,16 +2,16 @@ Ne modifiez pas ce fichier (même cette ligne) sauf pour y ajouter vos réponses
 aux endroits marqués de "..."
 
 Etudiant 1:
-Matricule: ...
-Nom: ...
-Prénom: ...
-Contribution au projet: ... %
+Matricule: s196085
+Nom: DI RENZO
+Prénom: Julien
+Contribution au projet: 50 %
 
 Etudiant 2: (laissez vide si vous avez fait le projet seul)
-Matricule: ...
-Nom: ...
-Prénom: ...
-Contribution au projet: ... %
+Matricule: s215072
+Nom: DELBARRE
+Prénom: Loïc
+Contribution au projet: 50 %
 
 Analyse de complexité
 =====================
@@ -22,7 +22,7 @@ fonction des paramètres mentionnés.
 plCompressPolyline: O(...)
 (en fonction du nombre de points n de la polyligne)
 
-sketchDistanceHausdorff: O(...)
+sketchDistanceHausdorff: O(n^2)
 (en supposant que les deux sketches contiennent le même nombre de points n)
 
 recNearestNeighbors: O(...)
