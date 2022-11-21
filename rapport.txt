@@ -37,17 +37,17 @@ et les temps de calcul dans chaque cas.
 ./NNSketch -k 5 -d hausdorff trainingset.txt testset.txt
 
 Précision:  67.80%
-Temps de calcul: 4.38s
+Temps de calcul: 4.41s
 
 ./NNSketch -k 5 -c 5.0 -d hausdorff trainingsetverylarge.txt testset.txt
 
 Précision: 71.40%
-Temps de calcul: 24.33s
+Temps de calcul: 25.27s
 
 ./NNSketch -k 5 -d hausdorff trainingsetverylarge.txt testset.txt
 
 Précision: 77.60%
-Temps de calcul: 43.89s
+Temps de calcul: 43.02s
 
 Paramètres optimaux pour votre distance
 =======================================
@@ -55,5 +55,5 @@ Paramètres optimaux pour votre distance
 Reportez ci-dessous la valeur de k et le seuil de compression
 que vous souhaitez qu'on utilise pour tester votre distance
 
-- k: 3 
+- k: 3
 - Compression: 0.5

@@ -146,36 +146,8 @@ static double distance1(Sketch *sk, Point p, double distanceMax)
   return dmin;
 }
 
-// Calcule max(distance1) pour chaque point de sk1
-static double distance2(Sketch *sk1, Sketch *sk2)
-{
-  double distance = 0;
-  PolyLine stroke;
-
-  for(int i=0; i < sketchGetNbStrokes(sk1); i++)
-  {
-    stroke = sketchGetStroke(sk1,i);
-    for(int j=0; j < stroke.length; j++)
-    {
-      distance = distance1(sk2,stroke.points[j],distance);
-    }
-  }
-
-  return distance;
-}
-
-double sketchDistanceHausdorff(Sketch *sk1, Sketch *sk2)
-{
-  double distance12 = distance2(sk1,sk2);
-  double distance21 = distance2(sk2,sk1);
-  if (distance12 >= distance21)
-    return distance12;
-  else
-    return distance21;
-}
-
 // Calcule max(distance1) pour chaque point de points 
-static double distance3(Point *points, int nbPoints, Sketch *sk2)
+static double distance2(Point *points, int nbPoints, Sketch *sk2)
 {
   double distance = 0;
 
@@ -186,7 +158,7 @@ static double distance3(Point *points, int nbPoints, Sketch *sk2)
 
   return distance;
 }
-
+// renvoie un tableau avec tous les points de sk
 static Point *extractPoints(Sketch *sk)
 {
   Point *points = malloc(sketchGetNbPoints(sk)*sizeof(Point));
@@ -204,6 +176,7 @@ static Point *extractPoints(Sketch *sk)
   }
   return points;
 }
+// mélange le tableau points
 static void randomize(Point points[],int size)
 {
   int randomizer;
@@ -216,14 +189,20 @@ static void randomize(Point points[],int size)
     points[randomizer] = tmp;
   }
 }
-double sketchDistanceCustom(Sketch *sk1, Sketch *sk2)
+
+double sketchDistanceHausdorff(Sketch *sk1, Sketch *sk2)
 {
   Point *points1 = extractPoints(sk1);
   Point *points2 = extractPoints(sk2);
   randomize(points1,sketchGetNbPoints(sk1));
   randomize(points2,sketchGetNbPoints(sk2));
-  double distance12 = distance3(points1,sketchGetNbPoints(sk1),sk2);
-  double distance21 = distance3(points2,sketchGetNbPoints(sk2),sk1);
+  /* mélanger les points augmente les chances de tomber sur
+     une distance < distanceMax (qui est la distance de l'itération précédante)
+     car on passe par des points différents au lieu de points proches les un 
+     des autres causant un return de la fonction interne et accélérant les calculs.
+  */
+  double distance12 = distance2(points1,sketchGetNbPoints(sk1),sk2);
+  double distance21 = distance2(points2,sketchGetNbPoints(sk2),sk1);
   free(points1);
   free(points2);
   if(distance12 >= distance21)
@@ -232,3 +211,10 @@ double sketchDistanceCustom(Sketch *sk1, Sketch *sk2)
     return distance21;
 }
 
+double sketchDistanceCustom(Sketch *sk1, Sketch *sk2)
+{
+  return sketchDistanceHausdorff(sk1,sk2);
+  /* On a surtout optimisé hausdorff au lieu de chercher
+     chercher une autre mesure de distance
+  */
+}

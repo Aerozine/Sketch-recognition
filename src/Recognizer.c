@@ -177,7 +177,7 @@ float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distan
 		correctLabel = dsGetLabelName(testset,dsGetLabel(testset,i));
 		if(strcmp(label,correctLabel)==0)
 			correctLabelFound++;
-		else
+		/*else
 		{
 			printf("neighbors: ");
 			for(int j=0; j < k; j++)
@@ -185,7 +185,7 @@ float recEvalkNN(Dataset *referenceset, Dataset *testset, int k, double (*distan
 				printf("%s (%f), ",dsGetLabelName(referenceset,dsGetLabel(referenceset,KitsuNeNinetails->neighbors[j])),KitsuNeNinetails->distances[j]);
 			}
 			printf("\n");
-		}
+		}*/
 		if (out)
 		{
 			fprintf(out, "Testing sketch n°%d /%d :\n",i+1,n);
