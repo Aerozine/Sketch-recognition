@@ -55,5 +55,5 @@ Paramètres optimaux pour votre distance
 Reportez ci-dessous la valeur de k et le seuil de compression
 que vous souhaitez qu'on utilise pour tester votre distance
 
-- k: ...
-- Compression: ...
+- k: 3 
+- Compression: 0.5
