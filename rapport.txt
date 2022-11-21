@@ -19,13 +19,13 @@ Analyse de complexité
 Reportez ci-dessous les complexités dans le pire cas des fonctions suivantes en
 fonction des paramètres mentionnés.
 
-plCompressPolyline: O(...)
+plCompressPolyline: O(nlog(n))
 (en fonction du nombre de points n de la polyligne)
 
 sketchDistanceHausdorff: O(n^2)
 (en supposant que les deux sketches contiennent le même nombre de points n)
 
-recNearestNeighbors: O(...)
+recNearestNeighbors: O(nlog(n) + k)
 (en fonction du nombre de sketches n et du nombre de voisins k)
 
 Expériences

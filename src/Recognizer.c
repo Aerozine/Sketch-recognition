@@ -67,12 +67,12 @@ static void tri_sousvecteur(double v[][2], int a, int b, double v_aux[][2])
    Tri du vecteur v de taille n, par ordre croissant, en utilisant
    le vecteur v_aux, de même taille, comme espace de travail auxiliaire
  */
-void tri_fusion(double v[][2], int n, double v_aux[][2])
+static void tri_fusion(double v[][2], int n, double v_aux[][2])
 {
   tri_sousvecteur(v, 0, n - 1, v_aux);
 }
 /* Les fonctions de mergesort ci-dessus sont des adaptations en 2D (où on ne trie que la 1ere dimension et l'autre suit)
-   du mergesort enseigné par M. Boigelot en "Introduction à l'informatique"
+   du mergesort enseigné par M. Boigelot en "Introduction à l'informatique".
  */
 
 kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sketch *, Sketch *))
@@ -103,22 +103,8 @@ kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sket
 	for(int i=0; i < nbSketches; i++)
 	{
 		allDistances[i][0] = distance(sk,dsGetSketch(ds,i));
-		allDistances[i][1] = (float)i;
+		allDistances[i][1] = (float) i;
 	}
-
-	/*int actualNeighbor = 0;
-	int lastNeighbor   = 0;
-
-	for(int i=0; i < k; i++)
-	{
-		for(int j=0; j < dsGetNbSketches(ds); j++)
-			if(j != lastNeighbor && allDistances[j] < allDistances[actualNeighbor])
-				actualNeighbor = j;
-
-		lastNeighbor = actualNeighbor;
-		neighbors[i] = actualNeighbor;
-		distances[i]  = allDistances[actualNeighbor];
-	}*/
 	tri_fusion(allDistances,nbSketches,v_aux);
 
 	for(int i=0;i < k; i++)
