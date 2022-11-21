@@ -2,6 +2,78 @@
 #include "Recognizer.h"
 #include <string.h>
 #include <stdlib.h>
+/*
+   Fusionne les vecteurs v1[a1:b1] et v2[a2:b2], supposés triés,
+   et place le résultat dans le vecteur v3[], supposé distinct
+   de v1[] et v2[] ainsi que de taille suffisante.
+*/  
+static void fusion(double v1[][2], int a1, int b1, double v2[][2], int a2, int b2, double v3[][2])
+{
+  int  i1, i2, i3;
+
+  for (i1 = a1, i2 = a2, i3 = 0; i1 <= b1 || i2 <= b2;)
+    if (i1 > b1)
+    {
+      	v3[i3][0] = v2[i2][0];
+      	v3[i3++][1] = v2[i2++][1];
+    }
+    else
+      if (i2 > b2)
+      {
+      	v3[i3][0] = v1[i1][0];
+        v3[i3++][1] = v1[i1++][1];
+      }
+      else
+      {
+      	if(v1[i1][0] < v2[i2][0])
+      	{
+      		v3[i3][0] = v1[i1][0];
+      		v3[i3++][1] = v1[i1++][1];
+      	}
+      	else
+      	{
+      		v3[i3][0] = v2[i2][0];
+      		v3[i3++][1] = v2[i2++][1];
+      	}
+      }
+}
+
+/* 
+   Tri du vecteur v[a:b], par ordre croissant, en utilisant
+   le vecteur v_aux[a:b] comme espace de travail auxiliaire
+*/
+static void tri_sousvecteur(double v[][2], int a, int b, double v_aux[][2])
+{
+  int n, c, i;
+
+  n = b - a + 1;
+  if (n < 2)
+    return;
+
+  c = a + (n + 1) / 2;
+  tri_sousvecteur(v, a, c - 1, v_aux);
+  tri_sousvecteur(v, c, b, v_aux);
+  
+  for (i = a; i <= b; i++)
+  {
+  	v_aux[i][0] = v[i][0];
+  	v_aux[i][1] = v[i][1];
+  }
+
+  fusion(v_aux, a, c - 1, v_aux, c, b, v + a);
+}
+
+/* 
+   Tri du vecteur v de taille n, par ordre croissant, en utilisant
+   le vecteur v_aux, de même taille, comme espace de travail auxiliaire
+ */
+void tri_fusion(double v[][2], int n, double v_aux[][2])
+{
+  tri_sousvecteur(v, 0, n - 1, v_aux);
+}
+/* Les fonctions de mergesort ci-dessus sont des adaptations en 2D (où on ne trie que la 1ere dimension et l'autre suit)
+   du mergesort enseigné par M. Boigelot en "Introduction à l'informatique"
+ */
 
 kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sketch *, Sketch *))
 {
@@ -24,12 +96,17 @@ kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sket
 		return NULL;
 	}
 
-	double allDistances[dsGetNbSketches(ds)];
+	int nbSketches = dsGetNbSketches(ds);
+	double allDistances[nbSketches][2];
+	double v_aux[nbSketches][2];
 
-	for(int i=0; i < dsGetNbSketches(ds); i++)
-		allDistances[i] = distance(sk,dsGetSketch(ds,i));
+	for(int i=0; i < nbSketches; i++)
+	{
+		allDistances[i][0] = distance(sk,dsGetSketch(ds,i));
+		allDistances[i][1] = (float)i;
+	}
 
-	int actualNeighbor = 0;
+	/*int actualNeighbor = 0;
 	int lastNeighbor   = 0;
 
 	for(int i=0; i < k; i++)
@@ -41,6 +118,13 @@ kNN *recNearestNeighbors(Sketch *sk, Dataset *ds, int k, double (*distance)(Sket
 		lastNeighbor = actualNeighbor;
 		neighbors[i] = actualNeighbor;
 		distances[i]  = allDistances[actualNeighbor];
+	}*/
+	tri_fusion(allDistances,nbSketches,v_aux);
+
+	for(int i=0;i < k; i++)
+	{
+		distances[i] = allDistances[i][0];
+		neighbors[i] = (int) allDistances[i][1];
 	}
 
 	KitsuNeNinetails->k         = k;
